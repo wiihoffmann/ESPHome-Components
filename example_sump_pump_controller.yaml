@@ -8,8 +8,8 @@ esphome:
 
 esp32:
   board: esp32-c3-devkitm-1
-  framework:
-    type: arduino
+  # framework:
+  #   type: arduino
 
 wifi:
   ssid: !secret wifi_ssid
@@ -32,15 +32,24 @@ web_server:
 external_components:
   - source:
       type: local
-      path: components
+      path: Components
     refresh: always
     components:
       - sump_pump_controller
 
+sump_pump_controller:
+  id: "SumpPumpTestID"
+
 switch:
   - platform: sump_pump_controller
-    name: "Switch Name"
-    icon: "mdi:restart"
+    sump_pump_controller_ID: SumpPumpTestID
+    manual_mode_switch:
+      name: Manual Mode
+    pump_switch:
+      name: Pump
+    battery_charger_switch:
+      name: Battery Charger
+
 
 # sump_pump_controller:
 #   id: controller
