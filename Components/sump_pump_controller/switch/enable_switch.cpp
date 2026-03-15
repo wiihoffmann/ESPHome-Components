@@ -2,7 +2,7 @@
 #include "enable_switch.h"
 
 namespace esphome {
-namespace enable_switch {
+namespace sump_pump_controller {
 
 static const char *TAG = "enable_switch.switch";
 

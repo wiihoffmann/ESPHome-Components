@@ -3,10 +3,12 @@
 #include "esphome/core/component.h"
 #include "esphome/components/switch/switch.h"
 
-namespace esphome {
-namespace enable_switch {
+#include "../SumpPumpController.h"
 
-class EnableSwitch : public switch_::Switch{
+namespace esphome {
+namespace sump_pump_controller {
+
+class EnableSwitch : public switch_::Switch, public Parented<SumpPumpController>, public SumpPumpController{
  public:
   EnableSwitch(){};
   void write_state(bool state) override;

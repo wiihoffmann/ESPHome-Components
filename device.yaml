@@ -26,14 +26,12 @@ api:
 
 logger:
 
-external_components:
-  - source:
-      type: local
-      path: components
-    refresh: always
-    components:
-      - empty_switch
+# external_components:
+#   - source:
+#       type: local
+#       path: components
+#     refresh: always
+#     components:
+#       - empty_component
 
-switch:
-  - platform: empty_switch
-    name: Empty switch
+# empty_component:

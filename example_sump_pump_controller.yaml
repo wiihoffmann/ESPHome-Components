@@ -37,7 +37,15 @@ external_components:
     components:
       - sump_pump_controller
 
-sump_pump_controller:
-  id: controller
-  sump_depth: 1.152
-  enable_switch: fartswitch
+switch:
+  - platform: sump_pump_controller
+    name: "Switch Name"
+    icon: "mdi:restart"
+
+# sump_pump_controller:
+#   id: controller
+#   sump_depth: 1.152
+#   # enable_switch: fartswitch
+#   state:
+#     name: memes
+#     id: fart
