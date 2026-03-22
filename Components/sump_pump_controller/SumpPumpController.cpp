@@ -6,6 +6,9 @@ namespace sump_pump_controller {
 
 static const char *TAG = "Sump Pump Controller";
 
+bool state = false;
+uint32_t time;
+
 void SumpPumpController::setup() {
     return;
 }
@@ -13,20 +16,27 @@ void SumpPumpController::setup() {
 void SumpPumpController::loop() {
     if(App.get_loop_component_start_time() >= time+1000){
         time = App.get_loop_component_start_time();
-        ESP_LOGD(TAG, "Dumping enable switch state: %i", enableSW->state);
+        RedLED->set_state((state = !state));
+        GreenLED->set_state(!state);
     }
-    
 }
 
 void SumpPumpController::dump_config(){
-    if(enableSW==nullptr) ESP_LOGD(TAG, "Enable switch is null!");
-    else ESP_LOGD(TAG, "Enable switch is set!");
+    if(enableSW==nullptr) ESP_LOGCONFIG(TAG, "Enable switch is not present!");
+    else ESP_LOGCONFIG(TAG, "Enable switch is set!");
 
-    if(pumpSW==nullptr) ESP_LOGD(TAG, "Pump switch is null!");
-    else ESP_LOGD(TAG, "Pump switch is set!");
+    if(pumpSW==nullptr) ESP_LOGCONFIG(TAG, "Pump switch is not present!");
+    else ESP_LOGCONFIG(TAG, "Pump switch is set!");
 
-    if(batteryChargerSW==nullptr) ESP_LOGD(TAG, "Battery Charger switch is null!");
-    else ESP_LOGD(TAG, "Battery charger switch is set!");
+    if(batteryChargerSW==nullptr) ESP_LOGCONFIG(TAG, "Battery Charger switch is not present!");
+    else ESP_LOGCONFIG(TAG, "Battery charger switch is set!");
+
+    ESP_LOGCONFIG(TAG, "Sump Depth is %.3f m", sumpDepthm);
+    ESP_LOGCONFIG(TAG, "Sump High Limit is %.3f m", sumpHighLimitm);
+    ESP_LOGCONFIG(TAG, "Sump Low Limit is %.3f m", sumpLowLimitm);
+    ESP_LOGCONFIG(TAG, "Charger cut-in voltage is %.3fv", chargerCutIn);
+    ESP_LOGCONFIG(TAG, "Charger cut-out voltage is %.3fv", chargerCutOut);
+    ESP_LOGCONFIG(TAG, "Maximum charge duration is %.3fs", maxChargeTime);
 }
 
 } //namespace sump_pump_controller

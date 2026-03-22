@@ -1,15 +1,19 @@
-# this is a simple test device setup that's used to compile and test the examples
-# esphome:
-#   name: components_test
-#   build_path: build/components_test
-esphome:
-  name: sump-test
-  friendly_name: sump test
+external_components:
+  - source:
+      type: local
+      path: Components
+    refresh: always
+    components:
+      - sump_pump_controller
 
 esp32:
   board: esp32-c3-devkitm-1
   # framework:
   #   type: arduino
+
+esphome:
+  name: sump-test
+  friendly_name: sump test
 
 wifi:
   ssid: !secret wifi_ssid
@@ -29,32 +33,87 @@ logger:
 web_server:
   port: 80
 
-external_components:
-  - source:
-      type: local
-      path: Components
-    refresh: always
-    components:
-      - sump_pump_controller
-
 sump_pump_controller:
-  id: "SumpPumpTestID"
+  id: SumpPump
+  sump_depth: 1 m
+  high_limit: 0.75 cm
+  low_limit: 2 mm
+  charger_cut_in: 12.4 v
+  charger_cut_out: 14.5 v
+  charge_time: 1 h
+  ultrasonic_sensor_id: ultrasonic_sensor
+  red_led_id: red_led
+  green_led_id: green_led
+  charge_fet_id: charge_fet
+  pump_fet_id: pump_fet
+  mode_switch_id: override_switch
+  current_sensor_id: battery_current
+  battery_voltage_id: battery_voltage
 
-switch:
-  - platform: sump_pump_controller
-    sump_pump_controller_ID: SumpPumpTestID
-    manual_mode_switch:
-      name: Manual Mode
-    pump_switch:
-      name: Pump
-    battery_charger_switch:
-      name: Battery Charger
+output:
+  - platform: gpio
+    pin: GPIO01
+    id: green_led
+
+  - platform: gpio
+    pin: GPIO10
+    id: red_led
+
+  - platform: gpio
+    pin: GPIO04
+    id: charge_fet
+
+  - platform: gpio
+    pin: GPIO07
+    id: pump_fet
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO00
+      mode:
+        input: true
+        pullup: true
+    id: override_switch
+    filters:
+      - delayed_on: 10ms
+      - delayed_off: 10ms
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: GPIO6
+    echo_pin: GPIO5
+    id: ultrasonic_sensor
+    update_interval: 1s
+    pulse_time: 10us
+    accuracy_decimals: 3
+
+  - platform: adc
+    pin: GPIO02
+    id: battery_voltage
+    update_interval: 1s
+    accuracy_decimals: 3
+    attenuation: auto
+    filters:
+      - multiply: 6.27743 
+
+  - platform: adc
+    pin: GPIO03
+    id: battery_current
+    update_interval: 1s
+    accuracy_decimals: 3
+    #samples: 255
+    attenuation: auto
+    filters:
+      - lambda: return (x - 1.895) * 2 / 3;
 
 
-# sump_pump_controller:
-#   id: controller
-#   sump_depth: 1.152
-#   # enable_switch: fartswitch
-#   state:
-#     name: memes
-#     id: fart
+  # switch:
+#   - platform: sump_pump_controller
+#     sump_pump_controller_ID: SumpPumpTestID
+#     manual_mode_switch:
+#       name: Manual Mode
+#     pump_switch:
+#       name: Pump
+#     battery_charger_switch:
+#       name: Battery Charger
