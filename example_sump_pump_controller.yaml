@@ -40,7 +40,15 @@ sump_pump_controller:
   low_limit: 2 mm
   charger_cut_in: 12.4 v
   charger_cut_out: 14.5 v
-  charge_time: 1 h
+  charge_time: 2 h
+  publish_rate: 5 s
+  tick_rate: 1 s
+  battery_voltage_sensor: 
+    name: Battery Voltage
+  battery_current_sensor: 
+    name: Battery Current
+  water_level_sensor: 
+    name: Water Level
   ultrasonic_sensor_id: ultrasonic_sensor
   red_led_id: red_led
   green_led_id: green_led
@@ -49,6 +57,16 @@ sump_pump_controller:
   mode_switch_id: override_switch
   current_sensor_id: battery_current
   battery_voltage_id: battery_voltage
+
+switch:
+- platform: sump_pump_controller
+  sump_pump_controller_ID: SumpPump
+  manual_mode_switch:
+    name: Manual Mode
+  pump_switch:
+    name: Pump
+  battery_charger_switch:
+    name: Battery Charger
 
 output:
   - platform: gpio
@@ -106,14 +124,3 @@ sensor:
     attenuation: auto
     filters:
       - lambda: return (x - 1.895) * 2 / 3;
-
-
-  # switch:
-#   - platform: sump_pump_controller
-#     sump_pump_controller_ID: SumpPumpTestID
-#     manual_mode_switch:
-#       name: Manual Mode
-#     pump_switch:
-#       name: Pump
-#     battery_charger_switch:
-#       name: Battery Charger
