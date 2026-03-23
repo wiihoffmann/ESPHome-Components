@@ -31,9 +31,15 @@ class SumpPumpController : public Component {
     void setChargeFETPin(gpio::GPIOBinaryOutput *pin){ChargeFET = pin;}
     void setPumpFETPin(gpio::GPIOBinaryOutput *pin){PumpFET = pin;}
     
+    void setDashboardCurrentSensor(sensor::Sensor *sens){DashboardCurrentSensor = sens;}
+    void setDashboardVoltageSensor(sensor::Sensor *sens){DashboardVoltageSensor = sens;}
+    void setInternalCurrentSensor(sensor::Sensor *sens){InternalCurrentSensor = sens;}
+    void setInternalVoltageSensor(sensor::Sensor *sens){InternalVoltageSensor = sens;}
+    void setWaterLevelSensor(sensor::Sensor *sens){InternalVoltageSensor = sens;}
+    
     void setManualSwitchPin(binary_sensor::BinarySensor *pin){ManualSwitch = pin;}
     
-    void setSumpLevelSensor(ultrasonic::UltrasonicSensorComponent *sens){sumpLevelSensor = sens;}
+    void setDistanceSensor(ultrasonic::UltrasonicSensorComponent *sens){sumpLevelSensor = sens;}
 
     void setup() override;
     void loop() override;
@@ -43,14 +49,15 @@ class SumpPumpController : public Component {
     switch_::Switch *enableSW{nullptr};
     switch_::Switch *pumpSW{nullptr};
     switch_::Switch *batteryChargerSW{nullptr};
-    
     esphome::gpio::GPIOBinaryOutput *RedLED{nullptr};
     esphome::gpio::GPIOBinaryOutput *GreenLED{nullptr};
     esphome::gpio::GPIOBinaryOutput *ChargeFET{nullptr};
     esphome::gpio::GPIOBinaryOutput *PumpFET{nullptr};
-    
+    sensor::Sensor *DashboardVoltageSensor{nullptr};
+    sensor::Sensor *DashboardCurrentSensor{nullptr};
+    sensor::Sensor *InternalVoltageSensor{nullptr};
+    sensor::Sensor *InternalCurrentSensor{nullptr};
     binary_sensor::BinarySensor *ManualSwitch{nullptr};
-    
     ultrasonic::UltrasonicSensorComponent *sumpLevelSensor{nullptr};
 
     float sumpDepthm = 0;
@@ -59,6 +66,8 @@ class SumpPumpController : public Component {
     float chargerCutIn = 0;
     float chargerCutOut = 0;
     float maxChargeTime = 0;
+
+    void onSumpLevelUpdate(float value);
 };
 
 
