@@ -6,6 +6,12 @@ external_components:
     components:
       - sump_pump_controller
 
+  # - source:
+  #     type: git
+  #     url: https://github.com/wiihoffmann/ESPHome-Components
+  #     ref: main
+  #   components: [sump_pump_controller]
+
 esp32:
   board: esp32-c3-devkitm-1
   # framework:
