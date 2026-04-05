@@ -24,7 +24,6 @@ CONFIG_SCHEMA = SUMP_PUMP_CONTROLLER_COMPONENT_SCHEMA.extend({
     cv.Optional(CONF_MANUAL_MODE_SWITCH): switch.switch_schema(ManualModeSwitch, device_class=DEVICE_CLASS_SWITCH, icon=ICON_MANUAL_MODE_SWITCH, default_restore_mode="RESTORE_DEFAULT_ON"),
     cv.Optional(CONF_PUMP_SWITCH): switch.switch_schema(PumpSwitch, device_class=DEVICE_CLASS_SWITCH, icon=ICON_PUMP_SWITCH),
     cv.Optional(CONF_BATTERY_CHARGER_SWITCH): switch.switch_schema(BatteyChargerSwitch, device_class=DEVICE_CLASS_SWITCH, icon=ICON_BATTERY_CHARGER_SWITCH),
-    #cv.Optional(CONF_BATTERY_CHARGER_SWITCH): switch.gpio_output_pin_schema(BatteyChargerSwitch, device_class=DEVICE_CLASS_SWITCH, icon=ICON_BATTERY_CHARGER_SWITCH),
 })
 
 async def to_code(config):

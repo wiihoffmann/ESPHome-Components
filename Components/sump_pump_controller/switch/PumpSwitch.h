@@ -9,10 +9,10 @@
 namespace esphome {
 namespace sump_pump_controller {
 
-class PumpSwitch : public switch_::Switch, public Parented<SumpPumpController>, public SumpPumpController{
- public:
-  PumpSwitch(){};
-  void write_state(bool state) override;
+class PumpSwitch : public switch_::Switch, public Parented<SumpPumpController>{
+  public:
+    PumpSwitch(){};
+    void write_state(bool state) override;
 };
 
 } //namespace enable_switch

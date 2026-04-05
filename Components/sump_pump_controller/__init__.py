@@ -29,7 +29,7 @@ CONF_PUMP_FET_ID = "pump_fet_id"
 CONF_MANUAL_SWITCH_ID = "mode_switch_id"
 CONF_CURRENT_SENSOR_ID = "current_sensor_id"
 CONF_BATTERY_VOLTAGE_ID = "battery_voltage_id"
-CONF_TICK_RATE = "tick_rate"
+CONF_MEASUREMENT_CONFIDENCE = "mesurement_confidence"
 CONF_PUBLISH_RATE = "publish_rate"
 CONF_BATTEY_VOLTAGE_SENSOR = "battery_voltage_sensor"
 CONF_BATERY_CURRENT_SENSOR = "battery_current_sensor"
@@ -60,13 +60,14 @@ CONFIG_SCHEMA = cv.Schema({
         cv.Optional(CONF_CHARGER_CUT_OUT, default="14.5 v"): cv.voltage,
         cv.Optional(CONF_CHARGE_TIME, default="2 h"): cv.positive_time_period_seconds,
         cv.Optional(CONF_PUBLISH_RATE, default="30 s"): cv.positive_time_period_seconds,
-        cv.Optional(CONF_TICK_RATE, default="1 s"): cv.positive_time_period_milliseconds,
+        cv.Optional(CONF_MEASUREMENT_CONFIDENCE, default = 5): cv.positive_int,
         cv.Optional(CONF_BATTEY_VOLTAGE_SENSOR): cv.Schema(sensor.sensor_schema(icon=ICON_BATTERY_VOLTAGE, accuracy_decimals=2, unit_of_measurement="V")),
         cv.Optional(CONF_BATERY_CURRENT_SENSOR): cv.Schema(sensor.sensor_schema(icon=ICON_BATTERY_CURRENT, accuracy_decimals=2, unit_of_measurement="A")),
         cv.Optional(CONF_WATER_LEVEL_SENSOR): cv.Schema(sensor.sensor_schema(icon=ICON_WATER_LEVEL, accuracy_decimals=1, unit_of_measurement="cm")),
 }).extend(cv.COMPONENT_SCHEMA)
 
 
+# used to generate the main.cpp file
 async def to_code(config):
     controller = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(controller, config)
@@ -77,6 +78,8 @@ async def to_code(config):
     cg.add(controller.setChargerCutIn(config[CONF_CHARGER_CUT_IN]))
     cg.add(controller.setChargerCutOut(config[CONF_CHARGER_CUT_OUT]))
     cg.add(controller.setMaxChargeTime(config[CONF_CHARGE_TIME]))
+    cg.add(controller.setPublishRate(config[CONF_PUBLISH_RATE]))
+    cg.add(controller.setMeasurementConfidence(config[CONF_MEASUREMENT_CONFIDENCE]))
 
     pinID = await cg.get_variable(config[CONF_RED_LED_ID])
     cg.add(controller.setRedLEDPin(pinID))
@@ -103,4 +106,4 @@ async def to_code(config):
         cg.add(controller.setDashboardCurrentSensor(sense))
     if CONF_WATER_LEVEL_SENSOR in config:
         sense = await sensor.new_sensor(config[CONF_WATER_LEVEL_SENSOR])
-        cg.add(controller.setDashboardCurrentSensor(sense))
+        cg.add(controller.setDashboardLevelSensor(sense))

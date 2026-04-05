@@ -6,7 +6,8 @@ namespace sump_pump_controller {
 static const char *TAG = "Pump Override Switch";
 
 void PumpSwitch::write_state(bool state) {
-    publish_state(state);
+    this->parent_->updateChargerState(false);
+    this->parent_->updatePumpState(state);
 }
 
 } //namespace sump_pump_controller
