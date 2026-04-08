@@ -121,7 +121,9 @@ void SumpPumpController::setup() {
     SumpLevelSensor->add_on_state_callback([this](float x){onSumpLevelUpdate(x);});
     InternalVoltageSensor->add_on_state_callback([this](float x){onInternalVoltageSensorUpdate(x);});
     PhysicalManualSwitch->add_on_state_callback([this](bool state){updateManualModeState(state);});
+    
     manualMode = PhysicalManualSwitch->state;
+    if(EnableSW != nullptr) EnableSW->publish_state(manualMode);
 }
 
 
@@ -149,7 +151,7 @@ void SumpPumpController::loop() {
         }
 
         // Pump turn-on. Cannot charge and pump!
-        if(!pumpOn && levelConfidence >= measurementConfidenceThreshold){
+        if(!pumpOn && (levelConfidence >= measurementConfidenceThreshold)){
             updateChargerState(false);
             updatePumpState(true);
         }
