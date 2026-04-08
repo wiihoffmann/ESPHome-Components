@@ -97,6 +97,7 @@ class SumpPumpController : public Component {
     uint32_t chargeStartTime = 0;
     bool redLEDstate = false;
     bool greenLEDstate = false;
+    bool initialManualStateSet = false;
     volatile bool charging = false;
     volatile bool pumpOn = false;
     volatile bool manualMode = false;

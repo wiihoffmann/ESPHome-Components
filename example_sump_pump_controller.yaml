@@ -1,7 +1,7 @@
 external_components:
   - source:
       type: local
-      path: Components
+      path: components
     refresh: always
     components:
       - sump_pump_controller
@@ -41,9 +41,9 @@ web_server:
 
 sump_pump_controller:
   id: SumpPump
-  sump_depth: 1 m
-  high_limit: 75 cm
-  low_limit: 20cm
+  sump_depth: 70 cm
+  high_limit: 34 cm
+  low_limit: 10 cm
   charger_cut_in: 12.4 v
   charger_cut_out: 14.5 v
   charge_time: 2 h

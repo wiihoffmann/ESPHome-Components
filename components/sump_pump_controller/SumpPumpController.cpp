@@ -121,13 +121,18 @@ void SumpPumpController::setup() {
     SumpLevelSensor->add_on_state_callback([this](float x){onSumpLevelUpdate(x);});
     InternalVoltageSensor->add_on_state_callback([this](float x){onInternalVoltageSensorUpdate(x);});
     PhysicalManualSwitch->add_on_state_callback([this](bool state){updateManualModeState(state);});
-    
-    manualMode = PhysicalManualSwitch->state;
-    if(EnableSW != nullptr) EnableSW->publish_state(manualMode);
 }
 
 
 void SumpPumpController::loop() {
+    // Set the manual switch state in the dashboard on first loop.
+    // This cannot be done in setup() as the switch may not be initialized yet.
+    if(!initialManualStateSet){
+        manualMode = PhysicalManualSwitch->state;
+        if(EnableSW != nullptr) EnableSW->publish_state(manualMode);
+        initialManualStateSet = true;
+    }
+
     // Publish new states to HomeAssistant every publishRate seconds
     if(App.get_loop_component_start_time() >= lastPublishTime + (publishRate*1000)){
         updateDashboard();
