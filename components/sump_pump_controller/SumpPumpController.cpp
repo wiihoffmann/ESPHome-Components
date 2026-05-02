@@ -149,6 +149,8 @@ void SumpPumpController::loop() {
         // Battery charger turn-on. Cannot charge and pump!
         if(!charging && !pumpOn && (voltageConfidence >= measurementConfidenceThreshold)){
             updateChargerState(true);
+            voltageConfidence = 0;
+            chargeStartTime = App.get_loop_component_start_time();
         }
         // Battery charger turn-off
         else if((InternalVoltageSensor->state >= chargerCutOut) || (App.get_loop_component_start_time() >= chargeStartTime + (maxChargeTime*1000))){
@@ -159,6 +161,7 @@ void SumpPumpController::loop() {
         if(!pumpOn && (levelConfidence >= measurementConfidenceThreshold)){
             updateChargerState(false);
             updatePumpState(true);
+            levelConfidence = 0;
         }
         // Pump turn-off
         else if(pumpOn && sumpLevelm <= sumpLowLimitm){
